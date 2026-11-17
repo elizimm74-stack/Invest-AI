@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invest AI — Autonomous Wealth Infrastructure</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brass: {
+                            DEFAULT: '#C8A96A',
+                            light: '#DFC794',
+                            dark: '#9E8147',
+                            subtle: 'rgba(200, 169, 106, 0.12)'
+                        },
+                        carbon: {
+                            DEFAULT: '#09090B',
+                            surface: '#111114',
+                            elevated: '#18181D',
+                            border: '#222228'
+                        },
+                        emerald: '#10B981',
+                        crimson: '#EF4444'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Menlo', 'Monaco', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            background-color: #09090B;
+            color: #F4F4F6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.025em;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #09090B; }
+        ::-webkit-scrollbar-thumb { background: #222228; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C8A96A; }
+
+        /* Custom Range Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #222228;
+            height: 4px;
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #C8A96A;
+            cursor: pointer;
+            border: 2px solid #09090B;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #C8A96A;
+            cursor: pointer;
+            border: 2px solid #09090B;
+        }
+
+        /* Realistic Matte-Titanium MacBook Chassis */
+        .macbook-lid {
+            background: #09090B;
+            border: 1px solid #2A2A32;
+            box-shadow:
+                0 0 0 6px #111114,
+                0 0 0 7px #222228,
+                0 32px 64px -16px rgba(0, 0, 0, 0.9);
+        }
+        .macbook-base {
+            background: linear-gradient(180deg, #1F1F26 0%, #111114 100%);
+            border: 1px solid #2A2A32;
+            border-top: none;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.85);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-carbon text-zinc-100 flex flex-col selection:bg-brass selection:text-carbon">
+
+    <!-- ================= TOP PRESENTATION BAR ================= -->
+    <header class="sticky top-0 z-50 border-b border-carbon-border bg-carbon/95 backdrop-blur-md px-4 sm:px-6 py-3 flex flex-wrap gap-3 items-center justify-between">
+        <!-- Brand Wordmark -->
+        <button onclick="setPresentationMode('landing')" class="flex items-center space-x-3 text-left group">
+            <div class="w-8 h-8 rounded-lg border border-brass/40 bg-brass-subtle flex items-center justify-center group-hover:border-brass transition">
+                <svg class="w-4 h-4 text-brass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                    <polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+            </div>
+            <div class="flex items-center space-x-2.5">
+                <span class="font-display font-semibold text-base tracking-tight text-white">INVEST AI</span>
+                <span class="hidden sm:inline text-[11px] font-mono text-brass px-2 py-0.5 rounded border border-brass/30 bg-brass-subtle">v2.4 INSTITUTIONAL</span>
+            </div>
+        </button>
+
+        <!-- Presentation View Mode Switcher -->
+        <div class="flex items-center space-x-1 bg-carbon-surface border border-carbon-border rounded-lg p-1">
+            <button onclick="setPresentationMode('landing')" id="mode-landing" class="px-3 py-1.5 rounded-md text-xs font-semibold transition bg-brass text-carbon">
+                Landing Page
+            </button>
+            <button onclick="setPresentationMode('macbook')" id="mode-macbook" class="px-3 py-1.5 rounded-md text-xs font-medium transition text-zinc-400 hover:text-white">
+                MacBook Frame
+            </button>
+            <button onclick="setPresentationMode('fullscreen')" id="mode-fullscreen" class="px-3 py-1.5 rounded-md text-xs font-medium transition text-zinc-400 hover:text-white">
+                Fullscreen App
+            </button>
+        </div>
+
+        <!-- Primary Action Trigger -->
+        <button onclick="executeRebalance()" class="px-3.5 py-1.5 rounded-lg border border-brass/50 bg-brass-subtle text-brass hover:bg-brass hover:text-carbon text-xs font-medium transition flex items-center space-x-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse"></span>
+            <span>Execute Rebalance</span>
+        </button>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- MODE 1: EDITORIAL PRIVATE-WEALTH LANDING PAGE                         -->
+    <!-- ===================================================================== -->
+    <section id="section-landing" class="flex-1 flex flex-col">
+        <!-- Hero Section -->
+        <div class="max-w-6xl mx-auto px-6 pt-16 sm:pt-20 pb-16 border-b border-carbon-border w-full">
+            <div class="max-w-3xl space-y-6">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-carbon-border bg-carbon-surface text-xs font-mono text-zinc-400">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brass"></span>
+                    <span>AUTONOMOUS PORTFOLIO INFRASTRUCTURE • APEX CUSTODY</span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-bold text-white leading-[1.08]">
+                    Autonomous Wealth Infrastructure, Engineered for Precision.
+                </h1>
+                <p class="text-base sm:text-lg text-zinc-400 leading-relaxed max-w-2xl">
+                    Continuous tax-loss harvesting, deterministic drawdown circuit breakers, and sub-second factor rebalancing—built with institutional custody and zero advisory bloat.
+                </p>
+                <div class="pt-2 flex flex-wrap items-center gap-4">
+                    <button onclick="setPresentationMode('macbook')" class="px-6 py-3 rounded-lg bg-brass text-carbon font-semibold text-sm hover:bg-brass-light transition">
+                        Launch Live Web App →
+                    </button>
+                    <button onclick="setPresentationMode('fullscreen')" class="px-6 py-3 rounded-lg border border-carbon-border bg-carbon-surface text-zinc-200 font-medium text-sm hover:border-zinc-600 transition">
+                        Open Fullscreen Terminal
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4-Column Telemetry Bar -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-px bg-carbon-border border border-carbon-border rounded-xl overflow-hidden mt-14">
+                <div class="bg-carbon-surface p-6">
+                    <p class="text-xs font-mono text-zinc-500 uppercase">Assets Under Autopilot</p>
+                    <p class="text-2xl font-mono font-semibold text-white mt-1.5">$1.42B</p>
+                    <p class="text-xs text-emerald font-mono mt-1">+18.4% QoQ Inflow</p>
+                </div>
+                <div class="bg-carbon-surface p-6">
+                    <p class="text-xs font-mono text-zinc-500 uppercase">Median Tax Alpha</p>
+                    <p class="text-2xl font-mono font-semibold text-brass mt-1.5">+164 bps</p>
+                    <p class="text-xs text-zinc-400 mt-1">Daily wash-sale harvesting</p>
+                </div>
+                <div class="bg-carbon-surface p-6">
+                    <p class="text-xs font-mono text-zinc-500 uppercase">Execution Latency</p>
+                    <p class="text-2xl font-mono font-semibold text-white mt-1.5">14 ms</p>
+                    <p class="text-xs text-zinc-400 mt-1">VWAP institutional routing</p>
+                </div>
+                <div class="bg-carbon-surface p-6">
+                    <p class="text-xs font-mono text-zinc-500 uppercase">Custodial Protection</p>
+                    <p class="text-2xl font-mono font-semibold text-white mt-1.5">$500,000</p>
+                    <p class="text-xs text-zinc-400 mt-1">SIPC insured via Apex Clearing</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive MacBook Preview Card on Landing Page -->
+        <div class="max-w-6xl mx-auto px-6 py-16 border-b border-carbon-border w-full">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+                <div>
+                    <p class="text-xs font-mono text-brass uppercase tracking-wider">Interactive Product Walkthrough</p>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Private-Wealth Desktop Terminal</h2>
+                </div>
+                <button onclick="setPresentationMode('macbook')" class="text-xs font-mono text-brass hover:underline text-left sm:text-right">
+                    Expand MacBook Presentation View →
+                </button>
+            </div>
+
+            <div onclick="setPresentationMode('macbook')" class="cursor-pointer group rounded-2xl border border-carbon-border bg-carbon-surface p-5 sm:p-8 hover:border-brass/40 transition">
+                <div class="rounded-xl border border-carbon-border bg-carbon overflow-hidden">
+                    <!-- Mini Browser Bar -->
+                    <div class="px-4 py-2.5 border-b border-carbon-border bg-carbon-elevated flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-zinc-700 group-hover:bg-crimson/80 transition"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-zinc-700 group-hover:bg-amber-500/80 transition"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-zinc-700 group-hover:bg-emerald/80 transition"></span>
+                        </div>
+                        <div class="px-4 py-1 rounded bg-carbon border border-carbon-border text-[11px] font-mono text-zinc-400 flex items-center space-x-1.5">
+                            <svg class="w-3 h-3 text-emerald" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span>https://app.investai.io/terminal</span>
+                        </div>
+                        <span class="text-[11px] font-mono text-brass group-hover:translate-x-0.5 transition hidden sm:inline">CLICK TO INTERACT →</span>
+                    </div>
+                    <!-- Preview Snapshot -->
+                    <div class="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2 space-y-4">
+                            <p class="text-xs font-mono text-zinc-400">NET LIQUIDATING VALUE</p>
+                            <p class="text-3xl sm:text-4xl font-mono font-bold text-white">$48,920.50 <span class="text-sm text-emerald font-normal">+7.52% (1M)</span></p>
+                            <svg viewBox="0 0 500 110" class="w-full h-28">
+                                <defs>
+                                    <linearGradient id="previewGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#10B981" stop-opacity="0.18"/>
+                                        <stop offset="100%" stop-color="#10B981" stop-opacity="0.0"/>
+                                    </linearGradient>
+                                </defs>
+                                <path d="M 0 90 Q 90 78, 170 55 T 340 35 T 500 12 L 500 110 L 0 110 Z" fill="url(#previewGrad)"/>
+                                <path d="M 0 90 Q 90 78, 170 55 T 340 35 T 500 12" fill="none" stroke="#10B981" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="border-t md:border-t-0 md:border-l border-carbon-border pt-4 md:pt-0 md:pl-6 space-y-4 flex flex-col justify-center">
+                            <div class="text-xs space-y-1">
+                                <p class="font-mono text-brass">AUTOPILOT STATUS</p>
+                                <p class="text-white font-medium">Active • Model #4 (Alpha Growth)</p>
+                            </div>
+                            <div class="text-xs space-y-1">
+                                <p class="font-mono text-zinc-400">NEXT REBALANCE</p>
+                                <p class="text-white font-mono">14m 22s • Drift 0.34%</p>
+                            </div>
+                            <div class="text-xs space-y-1">
+                                <p class="font-mono text-zinc-400">TAX HARVESTED YTD</p>
+                                <p class="text-emerald font-mono">+$1,284.40</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3-Column Architectural Grid -->
+        <div class="max-w-6xl mx-auto px-6 py-16 w-full">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="border border-carbon-border bg-carbon-surface rounded-xl p-6 space-y-3">
+                    <p class="text-xs font-mono text-brass">01 / DETERMINISTIC GUARDRAILS</p>
+                    <h3 class="text-lg font-semibold text-white">Automated Drawdown Circuit Breakers</h3>
+                    <p class="text-sm text-zinc-400 leading-relaxed">
+                        Hard-coded volatility caps automatically rotate exposed equity sleeves into short-duration U.S. Treasury bills when intraday tail-risk thresholds trigger.
+                    </p>
+                </div>
+                <div class="border border-carbon-border bg-carbon-surface rounded-xl p-6 space-y-3">
+                    <p class="text-xs font-mono text-brass">02 / CONTINUOUS TAX ALPHA</p>
+                    <h3 class="text-lg font-semibold text-white">Wash-Sale Compliant Harvesting</h3>
+                    <p class="text-sm text-zinc-400 leading-relaxed">
+                        Monitors every tax lot continuously across 30-day rolling windows, executing correlated ETF swaps to capture capital losses without breaking market exposure.
+                    </p>
+                </div>
+                <div class="border border-carbon-border bg-carbon-surface rounded-xl p-6 space-y-3">
+                    <p class="text-xs font-mono text-brass">03 / EXPLAINABLE RESEARCH DESK</p>
+                    <h3 class="text-lg font-semibold text-white">Auditable Factor Attribution</h3>
+                    <p class="text-sm text-zinc-400 leading-relaxed">
+                        Every autonomous trade includes a timestamped execution memo detailing macro regime signals, VWAP fill quality, and portfolio drift impact.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compliance Footer -->
+        <footer class="border-t border-carbon-border bg-carbon-surface px-6 py-8 mt-auto">
+            <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-zinc-500">
+                <div class="font-mono">INVEST AI TECHNOLOGIES INC. • SEC REGISTERED INVESTMENT ADVISOR</div>
+                <div>Custody & Clearing provided by Apex Clearing Corporation (Member FINRA/SIPC). Simulation figures for demonstration purposes.</div>
+            </div>
+        </footer>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- MODE 2 & 3: MACBOOK PRO PRESENTATION FRAME / FULLSCREEN TERMINAL      -->
+    <!-- ===================================================================== -->
+    <section id="section-app" class="hidden flex-1 py-6 sm:py-8 px-4 sm:px-8 flex flex-col items-center justify-center">
+        
+        <!-- Outer MacBook Pro Shell -->
+        <div id="macbook-shell" class="w-full max-w-6xl transition-all flex flex-col items-center">
+            <!-- Screen Lid -->
+            <div id="macbook-lid" class="macbook-lid w-full rounded-t-2xl rounded-b-lg overflow-hidden flex flex-col">
+                
+                <!-- macOS Browser Chrome -->
+                <div id="browser-chrome" class="px-4 py-3 border-b border-carbon-border bg-carbon-elevated flex items-center justify-between select-none">
+                    <!-- Traffic Light Controls -->
+                    <div class="flex items-center space-x-2 w-24">
+                        <button onclick="setPresentationMode('landing')" title="Return to Landing Page" class="w-3 h-3 rounded-full bg-crimson/85 hover:bg-crimson transition"></button>
+                        <button onclick="setPresentationMode('macbook')" title="MacBook Frame" class="w-3 h-3 rounded-full bg-amber-500/85 hover:bg-amber-400 transition"></button>
+                        <button onclick="setPresentationMode('fullscreen')" title="Toggle Fullscreen App" class="w-3 h-3 rounded-full bg-emerald/85 hover:bg-emerald transition"></button>
+                    </div>
+
+                    <!-- URL Address Bar -->
+                    <div class="flex items-center space-x-2 px-4 py-1 rounded-md bg-carbon border border-carbon-border text-xs font-mono text-zinc-400 w-full max-w-md justify-center">
+                        <svg class="w-3 h-3 text-emerald shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <span class="truncate">https://app.investai.io/terminal</span>
+                    </div>
+
+                    <!-- Connection Status -->
+                    <div class="text-[11px] font-mono text-zinc-400 w-24 text-right hidden sm:block">
+                        APEX: <span class="text-emerald">CONNECTED</span>
+                    </div>
+                </div>
+
+                <!-- Live Execution Notification Banner -->
+                <div id="execution-banner" class="hidden px-6 py-2.5 bg-brass-subtle border-b border-brass/30 flex items-center justify-between text-xs">
+                    <div class="flex items-center space-x-2.5 min-w-0">
+                        <span class="w-2 h-2 rounded-full bg-brass shrink-0"></span>
+                        <span class="font-mono text-brass font-semibold shrink-0" id="banner-title">REBALANCE EXECUTED</span>
+                        <span class="text-zinc-300 truncate" id="banner-desc">Bought 1.8x SMH @ $246.00 • VWAP Fill</span>
+                    </div>
+                    <button onclick="document.getElementById('execution-banner').classList.add('hidden')" class="text-zinc-400 hover:text-white font-mono ml-4 shrink-0">DISMISS</button>
+                </div>
+
+                <!-- Multi-Column Institutional Wealth Terminal -->
+                <div id="terminal-grid" class="grid grid-cols-1 lg:grid-cols-12 min-h-[680px] bg-carbon flex-1">
+                    
+                    <!-- Left Sidebar Navigation -->
+                    <aside class="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-carbon-border bg-carbon-surface p-5 flex flex-col justify-between">
+                        <div class="space-y-6">
+                            <div>
+                                <p class="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">Client Account</p>
+                                <p class="text-sm font-semibold text-white mt-0.5">Individual Margin • #8841</p>
+                            </div>
+
+                            <nav class="flex lg:flex-col gap-1.5 overflow-x-auto pb-1 lg:pb-0">
+                                <button onclick="switchTab(0)" class="terminal-nav shrink-0 lg:w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between bg-brass-subtle text-brass border border-brass/30" data-tab="0">
+                                    <span>01. Portfolio Overview</span>
+                                    <span class="font-mono text-[10px] ml-2">LIVE</span>
+                                </button>
+                                <button onclick="switchTab(1)" class="terminal-nav shrink-0 lg:w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between text-zinc-400 hover:text-white hover:bg-carbon-elevated border border-transparent" data-tab="1">
+                                    <span>02. Autopilot Strategy</span>
+                                    <span class="font-mono text-[10px] ml-2" id="sidebar-risk-badge">8/10</span>
+                                </button>
+                                <button onclick="switchTab(2)" class="terminal-nav shrink-0 lg:w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between text-zinc-400 hover:text-white hover:bg-carbon-elevated border border-transparent" data-tab="2">
+                                    <span>03. Research Desk</span>
+                                    <span class="font-mono text-[10px] text-brass ml-2" id="sidebar-memo-badge">1 NEW</span>
+                                </button>
+                                <button onclick="switchTab(3)" class="terminal-nav shrink-0 lg:w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between text-zinc-400 hover:text-white hover:bg-carbon-elevated border border-transparent" data-tab="3">
+                                    <span>04. Monte Carlo Lab</span>
+                                    <span class="font-mono text-[10px] ml-2">10K</span>
+                                </button>
+                                <button onclick="switchTab(4)" class="terminal-nav shrink-0 lg:w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between text-zinc-400 hover:text-white hover:bg-carbon-elevated border border-transparent" data-tab="4">
+                                    <span>05. Custodial Ledger</span>
+                                    <span class="font-mono text-[10px] ml-2" id="holdings-count">4</span>
+                                </button>
+                            </nav>
+                        </div>
+
+                        <div class="hidden lg:block pt-6 border-t border-carbon-border space-y-2.5 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-zinc-500">Tax Harvested YTD</span>
+                                <span class="font-mono text-emerald" id="sidebar-tax-ytd">+$1,284.40</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-zinc-500">Advisory Fee</span>
+                                <span class="font-mono text-zinc-300">0.15% AUM</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-zinc-500">Custodian</span>
+                                <span class="font-mono text-zinc-300">APEX / SIPC</span>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Right Workspace Area -->
+                    <div class="lg:col-span-9 p-6 sm:p-8 overflow-y-auto">
+                        
+                        <!-- ================================================= -->
+                        <!-- TAB 01: PORTFOLIO OVERVIEW                        -->
+                        <!-- ================================================= -->
+                        <div class="terminal-view space-y-6" data-view="0">
+                            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-carbon-border">
+                                <div>
+                                    <p class="text-xs font-mono text-zinc-400">NET LIQUIDATING VALUE</p>
+                                    <div class="flex flex-wrap items-baseline gap-3 mt-1">
+                                        <h2 id="main-balance" class="text-3xl sm:text-4xl font-mono font-bold text-white">$48,920.50</h2>
+                                        <span id="main-delta" class="text-xs font-mono text-emerald">+$3,420.10 (+7.52%)</span>
+                                    </div>
+                                    <p id="scrub-timestamp" class="text-[11px] font-mono text-zinc-500 mt-1">Hover or drag across chart to inspect historical valuation</p>
+                                </div>
+
+                                <!-- Timeframe Toggles -->
+                                <div class="flex space-x-1 bg-carbon-surface border border-carbon-border rounded-lg p-1 font-mono text-xs self-start sm:self-auto">
+                                    <button onclick="setTimeframe('1D')" class="tf-btn px-2.5 py-1 rounded text-zinc-400 hover:text-white transition" data-tf="1D">1D</button>
+                                    <button onclick="setTimeframe('1W')" class="tf-btn px-2.5 py-1 rounded text-zinc-400 hover:text-white transition" data-tf="1W">1W</button>
+                                    <button onclick="setTimeframe('1M')" class="tf-btn px-2.5 py-1 rounded bg-brass text-carbon font-semibold transition" data-tf="1M">1M</button>
+                                    <button onclick="setTimeframe('1Y')" class="tf-btn px-2.5 py-1 rounded text-zinc-400 hover:text-white transition" data-tf="1Y">1Y</button>
+                                    <button onclick="setTimeframe('ALL')" class="tf-btn px-2.5 py-1 rounded text-zinc-400 hover:text-white transition" data-tf="ALL">ALL</button>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Scrubbable SVG Performance Curve -->
+                            <div class="border border-carbon-border bg-carbon-surface rounded-xl p-5">
+                                <div class="relative h-52 w-full select-none" onmousemove="scrubChart(event)" onmouseleave="resetChartScrub()" ontouchmove="scrubChartTouch(event)" ontouchend="resetChartScrub()">
+                                    <svg id="wealth-svg" viewBox="0 0 700 180" class="w-full h-full overflow-visible cursor-crosshair">
+                                        <defs>
+                                            <linearGradient id="emeraldFill" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#10B981" stop-opacity="0.18"/>
+                                                <stop offset="100%" stop-color="#10B981" stop-opacity="0.0"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <line x1="0" y1="45" x2="700" y2="45" stroke="#222228" stroke-dasharray="3 3"/>
+                                        <line x1="0" y1="90" x2="700" y2="90" stroke="#222228" stroke-dasharray="3 3"/>
+                                        <line x1="0" y1="135" x2="700" y2="135" stroke="#222228" stroke-dasharray="3 3"/>
+                                        <path id="chart-area" d="" fill="url(#emeraldFill)"/>
+                                        <path id="chart-line" d="" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <line id="scrub-line" x1="700" y1="0" x2="700" y2="180" stroke="#71717A" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
+                                        <circle id="scrub-dot" cx="700" cy="24" r="4.5" fill="#10B981" stroke="#09090B" stroke-width="2"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Asset Allocation & Expandable Execution Log -->
+                            <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+                                <!-- Asset Allocation Breakdown Bars -->
+                                <div class="xl:col-span-5 border border-carbon-border bg-carbon-surface rounded-xl p-5 space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-xs font-mono uppercase tracking-wider text-zinc-400">Live Asset Allocation</h3>
+                                        <span class="text-[11px] font-mono text-brass">DRIFT: 0.34%</span>
+                                    </div>
+                                    <div id="overview-allocation-bars" class="space-y-3.5 text-xs">
+                                        <!-- Rendered dynamically -->
+                                    </div>
+                                </div>
+
+                                <!-- Expandable Autonomous Execution Log -->
+                                <div class="xl:col-span-7 border border-carbon-border bg-carbon-surface rounded-xl p-5 space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-xs font-mono uppercase tracking-wider text-zinc-400">Autonomous Execution Log</h3>
+                                        <span class="text-[11px] text-zinc-500">Click row for VWAP & TLH rationale</span>
+                                    </div>
+
+                                    <div id="execution-log-list" class="divide-y divide-carbon-border border-t border-b border-carbon-border">
+                                        <!-- Entry 1 -->
+                                        <div onclick="toggleExecutionDetail(this)" class="py-3 px-2 cursor-pointer hover:bg-carbon-elevated/60 transition">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-3">
+                                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald/10 text-emerald border border-emerald/20">BUY</span>
+                                                    <div>
+                                                        <p class="text-xs font-medium text-white">4.20 sh NVDA <span class="text-zinc-500">@ $134.50</span></p>
+                                                        <p class="text-[11px] text-zinc-400">Momentum Drift Rebalance • 2h ago</p>
+                                                    </div>
+                                                </div>
+                                                <span class="font-mono text-xs text-white">$564.90</span>
+                                            </div>
+                                            <div class="exec-detail hidden mt-2.5 pt-2.5 border-t border-carbon-border/70 text-[11px] text-zinc-400 leading-relaxed">
+                                                <span class="font-mono text-brass">VWAP FILL:</span> Executed 1.4 bps inside NBBO midpoint after semiconductor factor weight drifted -1.35% below target band.
+                                            </div>
+                                        </div>
+
+                                        <!-- Entry 2 -->
+                                        <div onclick="toggleExecutionDetail(this)" class="py-3 px-2 cursor-pointer hover:bg-carbon-elevated/60 transition">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-3">
+                                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-brass-subtle text-brass border border-brass/30">TLH</span>
+                                                    <div>
+                                                        <p class="text-xs font-medium text-white">Tax-Loss Harvest <span class="text-zinc-500">(QQQ → VGT)</span></p>
+                                                        <p class="text-[11px] text-zinc-400">Wash-Sale Compliant Swap • 1d ago</p>
+                                                    </div>
+                                                </div>
+                                                <span class="font-mono text-xs text-emerald">+$142.00</span>
+                                            </div>
+                                            <div class="exec-detail hidden mt-2.5 pt-2.5 border-t border-carbon-border/70 text-[11px] text-zinc-400 leading-relaxed">
+                                                <span class="font-mono text-brass">TAX ALPHA:</span> Harvested $405.70 short-term capital loss on Lot #19 while preserving 0.985 correlation via VGT; 30-day wash-sale lock engaged.
+                                            </div>
+                                        </div>
+
+                                        <!-- Entry 3 -->
+                                        <div onclick="toggleExecutionDetail(this)" class="py-3 px-2 cursor-pointer hover:bg-carbon-elevated/60 transition">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-3">
+                                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-crimson/10 text-crimson border border-crimson/20">TRIM</span>
+                                                    <div>
+                                                        <p class="text-xs font-medium text-white">2.00 sh TSLA <span class="text-zinc-500">@ $249.10</span></p>
+                                                        <p class="text-[11px] text-zinc-400">Volatility Cap Guardrail • 3d ago</p>
+                                                    </div>
+                                                </div>
+                                                <span class="font-mono text-xs text-zinc-300">$498.20</span>
+                                            </div>
+                                            <div class="exec-detail hidden mt-2.5 pt-2.5 border-t border-carbon-border/70 text-[11px] text-zinc-400 leading-relaxed">
+                                                <span class="font-mono text-brass">RISK CAP:</span> 30-day realized volatility breached 48.0% single-issuer threshold; proceeds swept into 0-3M Treasury bills (SGOV).
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================================================= -->
+                        <!-- TAB 02: AUTOPILOT STRATEGY                        -->
+                        <!-- ================================================= -->
+                        <div class="terminal-view hidden space-y-6" data-view="1">
+                            <div class="pb-5 border-b border-carbon-border">
+                                <p class="text-xs font-mono text-brass uppercase">Mandate Calibration</p>
+                                <h2 class="text-2xl font-bold text-white mt-1">Autopilot Strategy & Deterministic Guardrails</h2>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                <!-- Left: Risk Slider & Target Weights -->
+                                <div class="lg:col-span-6 border border-carbon-border bg-carbon-surface rounded-xl p-6 space-y-6">
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-xs font-medium text-zinc-300">Risk Profile Posture</span>
+                                            <span id="risk-profile-label" class="text-xs font-mono font-semibold text-brass">ALPHA GROWTH (8/10)</span>
+                                        </div>
+                                        <input type="range" min="1" max="10" value="8" oninput="updateAutopilotRisk(this.value)" class="w-full cursor-pointer">
+                                        <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+                                            <span>1 • PRESERVATION</span>
+                                            <span>5 • BALANCED</span>
+                                            <span>10 • ASYMMETRIC</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Projected Metrics -->
+                                    <div class="grid grid-cols-3 divide-x divide-carbon-border border border-carbon-border rounded-lg bg-carbon text-center py-3 font-mono">
+                                        <div>
+                                            <p class="text-[10px] text-zinc-500">SHARPE</p>
+                                            <p id="risk-sharpe" class="text-sm font-semibold text-white mt-0.5">2.41</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] text-zinc-500">TARGET VOL</p>
+                                            <p id="risk-vol" class="text-sm font-semibold text-brass mt-0.5">13.4%</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] text-zinc-500">EXP. CAGR</p>
+                                            <p id="risk-cagr" class="text-sm font-semibold text-emerald mt-0.5">11.8%</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Target Asset Weights -->
+                                    <div class="space-y-3.5 pt-2">
+                                        <h3 class="text-xs font-mono uppercase text-zinc-400">Target Mandate Weights</h3>
+                                        <div class="space-y-3 text-xs">
+                                            <div>
+                                                <div class="flex justify-between mb-1">
+                                                    <span class="text-zinc-200">US AI & Semiconductor Equities</span>
+                                                    <span id="weight-tech-text" class="font-mono text-brass">55%</span>
+                                                </div>
+                                                <div class="w-full h-1.5 bg-carbon rounded-full overflow-hidden">
+                                                    <div id="weight-tech-bar" class="bg-brass h-full transition-all duration-200" style="width: 55%"></div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="flex justify-between mb-1">
+                                                    <span class="text-zinc-200">S&P 500 Core Index (VOO)</span>
+                                                    <span id="weight-core-text" class="font-mono text-emerald">30%</span>
+                                                </div>
+                                                <div class="w-full h-1.5 bg-carbon rounded-full overflow-hidden">
+                                                    <div id="weight-core-bar" class="bg-emerald h-full transition-all duration-200" style="width: 30%"></div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="flex justify-between mb-1">
+                                                    <span class="text-zinc-200">0–3M Treasury Yield Sleeve (SGOV)</span>
+                                                    <span id="weight-tbill-text" class="font-mono text-zinc-400">15%</span>
+                                                </div>
+                                                <div class="w-full h-1.5 bg-carbon rounded-full overflow-hidden">
+                                                    <div id="weight-tbill-bar" class="bg-zinc-400 h-full transition-all duration-200" style="width: 15%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right: Deterministic Guardrails -->
+                                <div class="lg:col-span-6 border border-carbon-border bg-carbon-surface rounded-xl p-6 flex flex-col justify-between space-y-6">
+                                    <div class="space-y-4">
+                                        <h3 class="text-xs font-mono uppercase text-zinc-400">Deterministic Execution Guardrails</h3>
+
+                                        <div class="divide-y divide-carbon-border border-t border-b border-carbon-border">
+                                            <label class="py-4 flex items-center justify-between cursor-pointer">
+                                                <div class="pr-4">
+                                                    <p class="text-xs font-semibold text-white">Auto-Tax Loss Harvesting</p>
+                                                    <p class="text-[11px] text-zinc-400 mt-0.5">Continuous 30-day wash-sale compliant lot replacement</p>
+                                                </div>
+                                                <input type="checkbox" checked onchange="toggleGuardrail('Auto-Tax Loss Harvesting', this.checked)" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-carbon-border rounded-full peer peer-checked:bg-brass relative transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white peer-checked:after:bg-carbon after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shrink-0"></div>
+                                            </label>
+
+                                            <label class="py-4 flex items-center justify-between cursor-pointer">
+                                                <div class="pr-4">
+                                                    <p class="text-xs font-semibold text-white">Drawdown Circuit Breaker</p>
+                                                    <p class="text-[11px] text-zinc-400 mt-0.5">Rotate equity sleeves to T-Bills if intraday drop exceeds 4.0%</p>
+                                                </div>
+                                                <input type="checkbox" checked onchange="toggleGuardrail('Drawdown Circuit Breaker', this.checked)" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-carbon-border rounded-full peer peer-checked:bg-brass relative transition-colors after:content-[''] after:top-[2px] after:left-[2px] after:bg-white peer-checked:after:bg-carbon after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shrink-0"></div>
+                                            </label>
+
+                                            <label class="py-4 flex items-center justify-between cursor-pointer">
+                                                <div class="pr-4">
+                                                    <p class="text-xs font-semibold text-white">Dividend Auto-Compound</p>
+                                                    <p class="text-[11px] text-zinc-400 mt-0.5">Route cash payouts directly into underweight target assets</p>
+                                                </div>
+                                                <input type="checkbox" checked onchange="toggleGuardrail('Dividend Auto-Compound', this.checked)" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-carbon-border rounded-full peer peer-checked:bg-brass relative transition-colors after:content-[''] after:top-[2px] after:left-[2px] after:bg-white peer-checked:after:bg-carbon after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shrink-0"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-3.5 rounded-lg bg-carbon border border-carbon-border flex items-center justify-between text-xs font-mono">
+                                        <span class="text-zinc-500">SMART ORDER ROUTER</span>
+                                        <span class="text-emerald">VWAP / MIDPOINT ARMED</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================================================= -->
+                        <!-- TAB 03: RESEARCH DESK                             -->
+                        <!-- ================================================= -->
+                        <div class="terminal-view hidden space-y-6" data-view="2">
+                            <div class="pb-5 border-b border-carbon-border">
+                                <p class="text-xs font-mono text-brass uppercase">Auditable Factor Intelligence</p>
+                                <h2 class="text-2xl font-bold text-white mt-1">Research Desk & Portfolio Stress Q&A</h2>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                <!-- Memo #2026-114 Card -->
+                                <div class="lg:col-span-6 border border-brass/40 bg-carbon-surface rounded-xl p-6 flex flex-col justify-between space-y-5">
+                                    <div class="space-y-4">
+                                        <div class="flex items-center justify-between text-[11px] font-mono">
+                                            <span class="px-2.5 py-0.5 rounded bg-brass-subtle text-brass border border-brass/30">MEMO #2026-114 • 94% CONVICTION</span>
+                                            <span class="text-emerald">+14.2% EST. UPSIDE</span>
+                                        </div>
+
+                                        <h3 class="text-lg font-bold text-white">Rotate 5% Cash into Semiconductor ETF (SMH)</h3>
+
+                                        <p class="text-xs text-zinc-300 leading-relaxed">
+                                            Hyperscaler infrastructure CapEx guidance for Q4 exceeds consensus by 18%. Your current semiconductor exposure sits 3.4% below your Alpha Growth target band, creating an asymmetric entry window.
+                                        </p>
+
+                                        <div class="grid grid-cols-3 divide-x divide-carbon-border border border-carbon-border rounded-lg bg-carbon py-3 text-center font-mono">
+                                            <div>
+                                                <p class="text-[10px] text-zinc-500">ALLOCATION</p>
+                                                <p class="text-xs font-semibold text-white mt-0.5">$1,230.00</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[10px] text-zinc-500">EXECUTION</p>
+                                                <p class="text-xs font-semibold text-brass mt-0.5">5.00 sh SMH</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[10px] text-zinc-500">TAX IMPACT</p>
+                                                <p class="text-xs font-semibold text-emerald mt-0.5">$0.00</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button id="approve-memo-btn" onclick="approveMemoOrder()" class="w-full py-2.5 rounded-lg bg-brass text-carbon font-semibold text-xs hover:bg-brass-light transition">
+                                        Approve & Execute Order (5.00 sh SMH)
+                                    </button>
+                                </div>
+
+                                <!-- Interactive Portfolio Stress Q&A -->
+                                <div class="lg:col-span-6 border border-carbon-border bg-carbon-surface rounded-xl p-6 space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-xs font-mono uppercase text-zinc-400">Interactive Stress Q&A</h3>
+                                        <span class="text-[11px] font-mono text-zinc-500">FACTOR ENGINE</span>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <button onclick="selectStressPrompt('rates', this)" class="stress-btn w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium bg-carbon-elevated text-white border border-brass transition flex items-center justify-between">
+                                            <span>"How exposed am I to +50 bps interest rate hikes?"</span>
+                                            <span class="font-mono text-[10px] text-brass">ACTIVE</span>
+                                        </button>
+                                        <button onclick="selectStressPrompt('ai_cap', this)" class="stress-btn w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium bg-carbon text-zinc-400 border border-carbon-border hover:text-white transition flex items-center justify-between">
+                                            <span>"What happens if single-issuer AI weight spikes?"</span>
+                                            <span class="font-mono text-[10px] text-zinc-500">ASK</span>
+                                        </button>
+                                        <button onclick="selectStressPrompt('tlh_summary', this)" class="stress-btn w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium bg-carbon text-zinc-400 border border-carbon-border hover:text-white transition flex items-center justify-between">
+                                            <span>"Audit my tax-loss harvesting alpha YTD."</span>
+                                            <span class="font-mono text-[10px] text-zinc-500">ASK</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="p-4 rounded-lg bg-carbon border border-carbon-border space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <p id="stress-title" class="text-xs font-semibold text-white">Yield Curve & Duration Sensitivity</p>
+                                            <span id="stress-badge" class="text-[11px] font-mono text-emerald">-1.1% / +50 bps</span>
+                                        </div>
+                                        <p id="stress-answer" class="text-xs text-zinc-400 leading-relaxed">
+                                            Your portfolio duration is low (1.4 yrs). Only 18% of holdings exhibit high discount-rate sensitivity; a +50 bps parallel rate shock models to a -1.1% temporary drawdown, offset by 5.12% APY on SGOV.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================================================= -->
+                        <!-- TAB 04: MONTE CARLO LAB                           -->
+                        <!-- ================================================= -->
+                        <div class="terminal-view hidden space-y-6" data-view="3">
+                            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-5 border-b border-carbon-border">
+                                <div>
+                                    <p class="text-xs font-mono text-brass uppercase">10,000-Path Stochastic Modeling</p>
+                                    <h2 class="text-2xl font-bold text-white mt-1">Monte Carlo Wealth Projection Lab</h2>
+                                </div>
+
+                                <!-- Horizon Selector (5Y, 10Y, 20Y) -->
+                                <div class="flex space-x-1 bg-carbon-surface border border-carbon-border rounded-lg p-1 font-mono text-xs self-start sm:self-auto">
+                                    <button onclick="setHorizon(5)" class="horizon-btn px-3 py-1 rounded text-zinc-400 hover:text-white transition" data-years="5">5Y</button>
+                                    <button onclick="setHorizon(10)" class="horizon-btn px-3 py-1 rounded bg-brass text-carbon font-semibold transition" data-years="10">10Y</button>
+                                    <button onclick="setHorizon(20)" class="horizon-btn px-3 py-1 rounded text-zinc-400 hover:text-white transition" data-years="20">20Y</button>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                <!-- Left 8 Cols: Stochastic Fan Chart -->
+                                <div class="lg:col-span-8 border border-carbon-border bg-carbon-surface rounded-xl p-6 space-y-5">
+                                    <div class="flex flex-wrap items-end justify-between gap-4 border-b border-carbon-border pb-4">
+                                        <div>
+                                            <p class="text-[11px] font-mono text-zinc-400" id="mc-horizon-subtitle">10-YEAR MEDIAN PROJECTED WEALTH (9.4% CAGR)</p>
+                                            <p id="mc-median-val" class="text-3xl font-mono font-bold text-emerald mt-1">$318,450</p>
+                                        </div>
+                                        <div class="flex space-x-6 font-mono text-xs">
+                                            <div>
+                                                <p class="text-[10px] text-zinc-500">90TH PERCENTILE</p>
+                                                <p id="mc-p90-val" class="text-sm font-semibold text-brass mt-0.5">$462,100</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[10px] text-zinc-500">10TH PERCENTILE</p>
+                                                <p id="mc-p10-val" class="text-sm font-semibold text-zinc-400 mt-0.5">$214,800</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Fan Chart SVG -->
+                                    <div class="h-52 w-full">
+                                        <svg viewBox="0 0 640 180" class="w-full h-full overflow-visible">
+                                            <defs>
+                                                <linearGradient id="mcFanGrad" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stop-color="#C8A96A" stop-opacity="0.22"/>
+                                                    <stop offset="100%" stop-color="#10B981" stop-opacity="0.04"/>
+                                                </linearGradient>
+                                            </defs>
+                                            <line x1="0" y1="40" x2="640" y2="40" stroke="#222228" stroke-dasharray="3 3"/>
+                                            <line x1="0" y1="95" x2="640" y2="95" stroke="#222228" stroke-dasharray="3 3"/>
+                                            <line x1="0" y1="150" x2="640" y2="150" stroke="#222228" stroke-dasharray="3 3"/>
+                                            <path id="mc-fan-area" d="" fill="url(#mcFanGrad)"/>
+                                            <path id="mc-p90-path" d="" fill="none" stroke="#C8A96A" stroke-width="1.5" stroke-dasharray="4 4"/>
+                                            <path id="mc-p50-path" d="" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
+                                            <path id="mc-p10-path" d="" fill="none" stroke="#71717A" stroke-width="1.5" stroke-dasharray="2 3"/>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- Right 4 Cols: Contribution Slider & Historical Stress Benchmarks -->
+                                <div class="lg:col-span-4 border border-carbon-border bg-carbon-surface rounded-xl p-6 space-y-6">
+                                    <div class="p-4 rounded-lg bg-carbon border border-carbon-border space-y-3">
+                                        <div class="flex justify-between items-center text-xs">
+                                            <span class="text-zinc-400">Monthly Auto-Deposit</span>
+                                            <span id="mc-deposit-label" class="font-mono font-bold text-brass">$1,200 / mo</span>
+                                        </div>
+                                        <input id="mc-deposit-slider" type="range" min="200" max="5000" step="100" value="1200" oninput="updateMonteCarlo()" class="w-full cursor-pointer">
+                                        <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+                                            <span>$200</span>
+                                            <span>$2,500</span>
+                                            <span>$5,000</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-2.5">
+                                        <h3 class="text-xs font-mono uppercase text-zinc-400">Historical Stress Benchmarks</h3>
+                                        <div class="divide-y divide-carbon-border border border-carbon-border rounded-lg bg-carbon px-3.5">
+                                            <div class="py-3 flex justify-between items-center">
+                                                <div>
+                                                    <p class="text-xs font-semibold text-white">2022 Inflation Drawdown</p>
+                                                    <p class="text-[11px] text-zinc-400">Outperformed S&P 500 by +6.8%</p>
+                                                </div>
+                                                <span class="font-mono text-xs text-emerald">-11.3%</span>
+                                            </div>
+                                            <div class="py-3 flex justify-between items-center">
+                                                <div>
+                                                    <p class="text-xs font-semibold text-white">2020 Liquidity Shock</p>
+                                                    <p class="text-[11px] text-zinc-400">Full recovery in 41 trading days</p>
+                                                </div>
+                                                <span class="font-mono text-xs text-brass">-14.9%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================================================= -->
+                        <!-- TAB 05: CUSTODIAL LEDGER                          -->
+                        <!-- ================================================= -->
+                        <div class="terminal-view hidden space-y-6" data-view="4">
+                            <div class="flex flex-wrap items-end justify-between gap-4 pb-5 border-b border-carbon-border">
+                                <div>
+                                    <p class="text-xs font-mono text-brass uppercase">Apex Clearing Corporation</p>
+                                    <h2 class="text-2xl font-bold text-white mt-1">SIPC-Insured Custodial Holdings Ledger</h2>
+                                </div>
+                                <div class="flex space-x-6 font-mono text-xs">
+                                    <div>
+                                        <p class="text-[10px] text-zinc-500">TOTAL MARKET VALUE</p>
+                                        <p id="ledger-total-val" class="text-sm font-semibold text-white mt-0.5">$48,920.50</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-zinc-500">SIPC PROTECTION</p>
+                                        <p class="text-sm font-semibold text-emerald mt-0.5">$500,000.00</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border border-carbon-border bg-carbon-surface rounded-xl overflow-hidden">
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-carbon-border bg-carbon-elevated text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                                                <th class="py-3 px-4">Ticker</th>
+                                                <th class="py-3 px-4">Security</th>
+                                                <th class="py-3 px-4 text-right">Shares</th>
+                                                <th class="py-3 px-4 text-right">Avg Cost</th>
+                                                <th class="py-3 px-4 text-right">Market Price</th>
+                                                <th class="py-3 px-4 text-right">Market Value</th>
+                                                <th class="py-3 px-4 text-right">Unrealized P&L</th>
+                                                <th class="py-3 px-4 text-right">Weight</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="custodial-ledger-body" class="divide-y divide-carbon-border text-xs">
+                                            <!-- Populated dynamically via JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- MacBook Pro Lower Titanium Base -->
+            <div id="macbook-base" class="macbook-base w-[104%] max-w-[1220px] h-5 rounded-b-2xl flex items-start justify-center">
+                <div class="w-32 h-1.5 bg-zinc-700/70 rounded-b-md"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= INTERACTIVE SIMULATION SCRIPT ================= -->
+    <script>
+        // Portfolio & Simulation State
+        const state = {
+            timeframe: '1M',
+            horizonYears: 10,
+            holdings: [
+                { ticker: 'VOO', name: 'Vanguard S&P 500 ETF', shares: 28.00, avgCost: 479.85, price: 524.00, isYield: false },
+                { ticker: 'NVDA', name: 'NVIDIA Corporation', shares: 98.40, avgCost: 113.60, price: 134.50, isYield: false },
+                { ticker: 'MSFT', name: 'Microsoft Corporation', shares: 25.50, avgCost: 403.48, price: 428.10, isYield: false },
+                { ticker: 'SGOV', name: 'iShares 0-3 Month Treasury Bond ETF', shares: 100.50, avgCost: 100.12, price: 100.47, isYield: true, yieldLabel: '5.12% APY' }
+            ],
+            series: {
+                '1D': {
+                    delta: '+$312.40 (+0.64%)',
+                    dates: ['09:30 EST', '10:30 EST', '11:30 EST', '12:30 EST', '13:30 EST', '14:30 EST', '15:30 EST', '16:00 EST'],
+                    values: [48608.10, 48655.40, 48590.20, 48712.80, 48785.00, 48840.15, 48895.60, 48920.50]
+                },
+                '1W': {
+                    delta: '+$1,140.80 (+2.38%)',
+                    dates: ['Nov 10', 'Nov 11', 'Nov 12', 'Nov 13', 'Nov 14', 'Nov 15', 'Nov 16', 'Nov 17'],
+                    values: [47779.70, 47910.20, 48120.00, 48045.50, 48390.10, 48610.80, 48790.25, 48920.50]
+                },
+                '1M': {
+                    delta: '+$3,420.10 (+7.52%)',
+                    dates: ['Oct 18', 'Oct 22', 'Oct 26', 'Oct 30', 'Nov 03', 'Nov 07', 'Nov 12', 'Nov 17'],
+                    values: [45500.40, 45980.10, 46420.75, 46890.00, 47410.30, 47985.60, 48510.20, 48920.50]
+                },
+                '1Y': {
+                    delta: '+$11,890.00 (+32.10%)',
+                    dates: ['Jan 2026', 'Feb 2026', 'Apr 2026', 'May 2026', 'Jul 2026', 'Aug 2026', 'Oct 2026', 'Nov 2026'],
+                    values: [37030.50, 38450.00, 39920.40, 41680.90, 43510.20, 45190.00, 47240.80, 48920.50]
+                },
+                'ALL': {
+                    delta: '+$21,420.50 (+77.89%)',
+                    dates: ['Q1 2024', 'Q3 2024', 'Q1 2025', 'Q3 2025', 'Q1 2026', 'Q2 2026', 'Q3 2026', 'Nov 2026'],
+                    values: [27500.00, 30420.00, 33890.50, 37110.00, 40850.20, 43990.40, 46810.00, 48920.50]
+                }
+            },
+            stressResponses: {
+                rates: {
+                    title: 'Yield Curve & Duration Sensitivity',
+                    badge: '-1.1% / +50 bps',
+                    answer: 'Your portfolio duration is low (1.4 yrs). Only 18% of holdings exhibit high discount-rate sensitivity; a +50 bps parallel rate shock models to a -1.1% temporary drawdown, offset by 5.12% APY on SGOV.'
+                },
+                ai_cap: {
+                    title: 'Single-Issuer Concentration & Volatility Guardrail',
+                    badge: '30.0% HARD CAP',
+                    answer: 'NVDA currently accounts for 27.1% of portfolio equity. If single-issuer weight breaches 30.0% or 30-day implied volatility exceeds 48%, Autopilot trims excess lots and rotates proceeds into VOO and SGOV.'
+                },
+                tlh_summary: {
+                    title: 'Realized Tax-Loss Harvesting Attribution',
+                    badge: '+$1,284.40 YTD',
+                    answer: 'Continuous lot-level scanning has harvested $3,670.00 in short-term capital losses across correlated ETF pairs YTD, generating +$1,284.40 in net tax savings with zero wash-sale violations.'
+                }
+            }
+        };
+
+        let chartPoints = [];
+
+        function formatMoney(num) {
+            return '$' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function getPortfolioTotal() {
+            return state.holdings.reduce((sum, h) => sum + (h.shares * h.price), 0);
+        }
+
+        // Switch Presentation Mode: Landing Page / MacBook Frame / Fullscreen App
+        function setPresentationMode(mode) {
+            const landing = document.getElementById('section-landing');
+            const app = document.getElementById('section-app');
+            const shell = document.getElementById('macbook-shell');
+            const lid = document.getElementById('macbook-lid');
+            const base = document.getElementById('macbook-base');
+            const chrome = document.getElementById('browser-chrome');
+            const terminalGrid = document.getElementById('terminal-grid');
+
+            ['landing', 'macbook', 'fullscreen'].forEach(m => {
+                const btn = document.getElementById('mode-' + m);
+                if (!btn) return;
+                btn.className = (m === mode)
+                    ? 'px-3 py-1.5 rounded-md text-xs font-semibold transition bg-brass text-carbon'
+                    : 'px-3 py-1.5 rounded-md text-xs font-medium transition text-zinc-400 hover:text-white';
+            });
+
+            if (mode === 'landing') {
+                landing.classList.remove('hidden');
+                app.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (mode === 'macbook') {
+                landing.classList.add('hidden');
+                app.classList.remove('hidden');
+                app.className = 'flex-1 py-6 sm:py-8 px-4 sm:px-8 flex flex-col items-center justify-center';
+                shell.className = 'w-full max-w-6xl transition-all flex flex-col items-center';
+                lid.className = 'macbook-lid w-full rounded-t-2xl rounded-b-lg overflow-hidden flex flex-col';
+                base.classList.remove('hidden');
+                chrome.classList.remove('hidden');
+                terminalGrid.className = 'grid grid-cols-1 lg:grid-cols-12 min-h-[680px] bg-carbon flex-1';
+            } else {
+                landing.classList.add('hidden');
+                app.classList.remove('hidden');
+                app.className = 'flex-1 flex flex-col w-full p-0';
+                shell.className = 'w-full flex-1 flex flex-col';
+                lid.className = 'w-full flex-1 flex flex-col bg-carbon';
+                base.classList.add('hidden');
+                chrome.classList.remove('hidden');
+                terminalGrid.className = 'grid grid-cols-1 lg:grid-cols-12 flex-1 bg-carbon';
+            }
+        }
+
+        // Switch Terminal Sidebar Tabs (0 - 4)
+        function switchTab(index) {
+            document.querySelectorAll('.terminal-view').forEach(view => {
+                view.classList.toggle('hidden', parseInt(view.dataset.view) !== index);
+            });
+
+            document.querySelectorAll('.terminal-nav').forEach(btn => {
+                const isActive = parseInt(btn.dataset.tab) === index;
+                btn.className = isActive
+                    ? 'terminal-nav shrink-0 lg:w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between bg-brass-subtle text-brass border border-brass/30'
+                    : 'terminal-nav shrink-0 lg:w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium flex items-center justify-between text-zinc-400 hover:text-white hover:bg-carbon-elevated border border-transparent';
+            });
+        }
+
+        // Render Interactive SVG Chart & Scrubbing
+        function renderChart(tf) {
+            const data = state.series[tf];
+            const currentTotal = getPortfolioTotal();
+            const vals = [...data.values];
+            vals[vals.length - 1] = currentTotal;
+
+            const minVal = Math.min(...vals) * 0.994;
+            const maxVal = Math.max(...vals) * 1.004;
+            const width = 700;
+            const topPad = 16;
+            const bottomPad = 158;
+
+            chartPoints = vals.map((v, i) => {
+                const x = (i / (vals.length - 1)) * width;
+                const ratio = (v - minVal) / (maxVal - minVal || 1);
+                const y = bottomPad - ratio * (bottomPad - topPad);
+                return { x, y, val: v, date: data.dates[i] };
+            });
+
+            const linePath = chartPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+            const areaPath = `${linePath} L ${width} 178 L 0 178 Z`;
+
+            document.getElementById('chart-line').setAttribute('d', linePath);
+            document.getElementById('chart-area').setAttribute('d', areaPath);
+
+            const last = chartPoints[chartPoints.length - 1];
+            document.getElementById('scrub-dot').setAttribute('cx', last.x);
+            document.getElementById('scrub-dot').setAttribute('cy', last.y);
+
+            document.getElementById('main-balance').textContent = formatMoney(currentTotal);
+            document.getElementById('main-delta').textContent = data.delta;
+        }
+
+        function setTimeframe(tf) {
+            state.timeframe = tf;
+            document.querySelectorAll('.tf-btn').forEach(btn => {
+                const isActive = btn.dataset.tf === tf;
+                btn.className = isActive
+                    ? 'tf-btn px-2.5 py-1 rounded bg-brass text-carbon font-semibold transition'
+                    : 'tf-btn px-2.5 py-1 rounded text-zinc-400 hover:text-white transition';
+            });
+            renderChart(tf);
+        }
+
+        function updateScrubPosition(clientX) {
+            if (!chartPoints.length) return;
+            const svg = document.getElementById('wealth-svg');
+            const rect = svg.getBoundingClientRect();
+            const relX = Math.max(0, Math.min(700, ((clientX - rect.left) / rect.width) * 700));
+
+            let closest = chartPoints[0];
+            let minDist = Infinity;
+            chartPoints.forEach(pt => {
+                const dist = Math.abs(pt.x - relX);
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = pt;
+                }
+            });
+
+            const guide = document.getElementById('scrub-line');
+            const dot = document.getElementById('scrub-dot');
+            guide.setAttribute('x1', closest.x);
+            guide.setAttribute('x2', closest.x);
+            guide.setAttribute('opacity', '1');
+            dot.setAttribute('cx', closest.x);
+            dot.setAttribute('cy', closest.y);
+
+            document.getElementById('main-balance').textContent = formatMoney(closest.val);
+            document.getElementById('scrub-timestamp').textContent = `Historical Snapshot • ${closest.date}`;
+        }
+
+        function scrubChart(e) {
+            updateScrubPosition(e.clientX);
+        }
+
+        function scrubChartTouch(e) {
+            if (e.touches && e.touches[0]) {
+                updateScrubPosition(e.touches[0].clientX);
+            }
+        }
+
+        function resetChartScrub() {
+            if (!chartPoints.length) return;
+            const last = chartPoints[chartPoints.length - 1];
+            document.getElementById('scrub-line').setAttribute('opacity', '0');
+            document.getElementById('scrub-dot').setAttribute('cx', last.x);
+            document.getElementById('scrub-dot').setAttribute('cy', last.y);
+            document.getElementById('main-balance').textContent = formatMoney(getPortfolioTotal());
+            document.getElementById('scrub-timestamp').textContent = 'Hover or drag across chart to inspect historical valuation';
+        }
+
+        function toggleExecutionDetail(row) {
+            const detail = row.querySelector('.exec-detail');
+            if (detail) detail.classList.toggle('hidden');
+        }
+
+        // Render Asset Allocation Bars & Custodial Ledger Table
+        function renderHoldings() {
+            const total = getPortfolioTotal();
+            const allocContainer = document.getElementById('overview-allocation-bars');
+            const tbody = document.getElementById('custodial-ledger-body');
+
+            allocContainer.innerHTML = '';
+            tbody.innerHTML = '';
+
+            state.holdings.forEach(h => {
+                const mktVal = h.shares * h.price;
+                const costBasis = h.shares * h.avgCost;
+                const pnl = mktVal - costBasis;
+                const pnlPct = ((pnl / costBasis) * 100).toFixed(2);
+                const weight = ((mktVal / total) * 100).toFixed(1);
+
+                // Overview Allocation Bar
+                const barItem = document.createElement('div');
+                barItem.innerHTML = `
+                    <div class="flex justify-between mb-1">
+                        <span class="font-medium text-white">${h.ticker} <span class="text-zinc-500 font-normal">• ${formatMoney(mktVal)}</span></span>
+                        <span class="font-mono text-zinc-400">${weight}%</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-carbon rounded-full overflow-hidden">
+                        <div class="${h.isYield ? 'bg-zinc-400' : 'bg-brass'} h-full transition-all duration-300" style="width: ${weight}%"></div>
+                    </div>
+                `;
+                allocContainer.appendChild(barItem);
+
+                // Custodial Ledger Row
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-carbon-elevated/50 transition';
+                const pnlDisplay = h.isYield
+                    ? `<span class="text-brass">${h.yieldLabel}</span>`
+                    : `<span class="text-emerald">+${formatMoney(pnl)} (+${pnlPct}%)</span>`;
+
+                tr.innerHTML = `
+                    <td class="py-3.5 px-4 font-mono font-semibold text-white">${h.ticker}</td>
+                    <td class="py-3.5 px-4 text-zinc-300">${h.name}</td>
+                    <td class="py-3.5 px-4 text-right font-mono text-zinc-200">${h.shares.toFixed(2)}</td>
+                    <td class="py-3.5 px-4 text-right font-mono text-zinc-400">${formatMoney(h.avgCost)}</td>
+                    <td class="py-3.5 px-4 text-right font-mono text-zinc-200">${formatMoney(h.price)}</td>
+                    <td class="py-3.5 px-4 text-right font-mono font-semibold text-white">${formatMoney(mktVal)}</td>
+                    <td class="py-3.5 px-4 text-right font-mono">${pnlDisplay}</td>
+                    <td class="py-3.5 px-4 text-right font-mono text-brass">${weight}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('ledger-total-val').textContent = formatMoney(total);
+            document.getElementById('holdings-count').textContent = state.holdings.length;
+        }
+
+        function showBanner(title, desc) {
+            const banner = document.getElementById('execution-banner');
+            document.getElementById('banner-title').textContent = title;
+            document.getElementById('banner-desc').textContent = desc;
+            banner.classList.remove('hidden');
+        }
+
+        function settleTrade({ badge, badgeClass, summary, subline, amount, ticker, name, shares, price, rationale }) {
+            const existing = state.holdings.find(h => h.ticker === ticker);
+            if (existing) {
+                const prevCost = existing.shares * existing.avgCost;
+                existing.shares += shares;
+                existing.avgCost = (prevCost + (shares * price)) / existing.shares;
+            } else {
+                state.holdings.unshift({
+                    ticker,
+                    name,
+                    shares,
+                    avgCost: price,
+                    price,
+                    isYield: false
+                });
+            }
+
+            renderHoldings();
+            renderChart(state.timeframe);
+            updateMonteCarlo();
+
+            const logList = document.getElementById('execution-log-list');
+            const row = document.createElement('div');
+            row.onclick = function () { toggleExecutionDetail(this); };
+            row.className = 'py-3 px-2 cursor-pointer hover:bg-carbon-elevated/60 transition bg-brass-subtle/30';
+            row.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded ${badgeClass}">${badge}</span>
+                        <div>
+                            <p class="text-xs font-medium text-white">${summary}</p>
+                            <p class="text-[11px] text-brass">${subline} • Just now</p>
+                        </div>
+                    </div>
+                    <span class="font-mono text-xs text-white">${formatMoney(amount)}</span>
+                </div>
+                <div class="exec-detail hidden mt-2.5 pt-2.5 border-t border-carbon-border/70 text-[11px] text-zinc-400 leading-relaxed">
+                    <span class="font-mono text-brass">EXECUTION LOG:</span> ${rationale}
+                </div>
+            `;
+            logList.prepend(row);
+
+            showBanner(`${badge} FILLED • ${ticker}`, `${summary} (${formatMoney(amount)})`);
+        }
+
+        function executeRebalance() {
+            const presets = [
+                {
+                    badge: 'BUY',
+                    badgeClass: 'bg-emerald/10 text-emerald border border-emerald/20',
+                    summary: '2.00 sh NVDA @ $134.50',
+                    subline: 'Autonomous Factor Rebalance',
+                    amount: 269.00,
+                    ticker: 'NVDA',
+                    name: 'NVIDIA Corporation',
+                    shares: 2.00,
+                    price: 134.50,
+                    rationale: 'VWAP fill executed inside NBBO spread to restore semiconductor sleeve to target mandate weight.'
+                },
+                {
+                    badge: 'BUY',
+                    badgeClass: 'bg-emerald/10 text-emerald border border-emerald/20',
+                    summary: '1.00 sh MSFT @ $428.10',
+                    subline: 'Cloud CapEx Momentum Trigger',
+                    amount: 428.10,
+                    ticker: 'MSFT',
+                    name: 'Microsoft Corporation',
+                    shares: 1.00,
+                    price: 428.10,
+                    rationale: 'Added enterprise AI infrastructure exposure following positive free-cash-flow revision.'
+                },
+                {
+                    badge: 'SWEEP',
+                    badgeClass: 'bg-brass-subtle text-brass border border-brass/30',
+                    summary: '3.00 sh SGOV @ $100.47',
+                    subline: 'Idle Cash Treasury Sweep',
+                    amount: 301.41,
+                    ticker: 'SGOV',
+                    name: 'iShares 0-3 Month Treasury Bond ETF',
+                    shares: 3.00,
+                    price: 100.47,
+                    rationale: 'Swept uninvested cash into 0–3M U.S. Treasury bills yielding 5.12% APY.'
+                }
+            ];
+            const pick = presets[Math.floor(Math.random() * presets.length)];
+            settleTrade(pick);
+        }
+
+        // Tab 02: Autopilot Strategy Slider & Guardrails
+        function updateAutopilotRisk(val) {
+            const level = parseInt(val);
+            let name = 'ALPHA GROWTH';
+            if (level <= 3) name = 'CAPITAL PRESERVATION';
+            else if (level <= 6) name = 'BALANCED CORE';
+            else if (level >= 9) name = 'ASYMMETRIC CONVEX';
+
+            const tech = Math.min(75, Math.max(15, 10 + level * 6));
+            const tbill = Math.min(65, Math.max(5, 65 - level * 6));
+            const core = 100 - tech - tbill;
+
+            document.getElementById('risk-profile-label').textContent = `${name} (${level}/10)`;
+            document.getElementById('sidebar-risk-badge').textContent = `${level}/10`;
+            document.getElementById('risk-sharpe').textContent = (1.72 + level * 0.085).toFixed(2);
+            document.getElementById('risk-vol').textContent = (3.8 + level * 1.2).toFixed(1) + '%';
+            document.getElementById('risk-cagr').textContent = (5.4 + level * 0.8).toFixed(1) + '%';
+
+            document.getElementById('weight-tech-text').textContent = tech + '%';
+            document.getElementById('weight-tech-bar').style.width = tech + '%';
+            document.getElementById('weight-core-text').textContent = core + '%';
+            document.getElementById('weight-core-bar').style.width = core + '%';
+            document.getElementById('weight-tbill-text').textContent = tbill + '%';
+            document.getElementById('weight-tbill-bar').style.width = tbill + '%';
+        }
+
+        function toggleGuardrail(name, isOn) {
+            showBanner(
+                `GUARDRAIL ${isOn ? 'ARMED' : 'PAUSED'}`,
+                `${name} is now ${isOn ? 'actively enforced prior to order routing' : 'temporarily bypassed by client override'}.`
+            );
+        }
+
+        // Tab 03: Research Desk Memo Approval & Stress Q&A
+        function approveMemoOrder() {
+            const btn = document.getElementById('approve-memo-btn');
+            if (btn.disabled) return;
+            btn.disabled = true;
+            btn.className = 'w-full py-2.5 rounded-lg bg-emerald/15 border border-emerald/30 text-emerald font-semibold text-xs cursor-default';
+            btn.textContent = '✓ Order Executed & Settled (5.00 sh SMH)';
+            document.getElementById('sidebar-memo-badge').textContent = 'DONE';
+            document.getElementById('sidebar-memo-badge').className = 'font-mono text-[10px] text-emerald ml-2';
+
+            settleTrade({
+                badge: 'MEMO',
+                badgeClass: 'bg-brass-subtle text-brass border border-brass/30',
+                summary: '5.00 sh SMH @ $246.00',
+                subline: 'Memo #2026-114 Execution',
+                amount: 1230.00,
+                ticker: 'SMH',
+                name: 'VanEck Semiconductor ETF',
+                shares: 5.00,
+                price: 246.00,
+                rationale: 'Approved Research Desk Memo #2026-114: Rotated 5% cash reserve into SMH following Q4 hyperscaler CapEx beat.'
+            });
+        }
+
+        function selectStressPrompt(key, btn) {
+            const item = state.stressResponses[key];
+            if (!item) return;
+
+            document.querySelectorAll('.stress-btn').forEach(b => {
+                b.className = 'stress-btn w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium bg-carbon text-zinc-400 border border-carbon-border hover:text-white transition flex items-center justify-between';
+                const tag = b.querySelector('span:last-child');
+                if (tag) { tag.textContent = 'ASK'; tag.className = 'font-mono text-[10px] text-zinc-500'; }
+            });
+
+            btn.className = 'stress-btn w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium bg-carbon-elevated text-white border border-brass transition flex items-center justify-between';
+            const activeTag = btn.querySelector('span:last-child');
+            if (activeTag) { activeTag.textContent = 'ACTIVE'; activeTag.className = 'font-mono text-[10px] text-brass'; }
+
+            document.getElementById('stress-title').textContent = item.title;
+            document.getElementById('stress-badge').textContent = item.badge;
+            document.getElementById('stress-answer').textContent = item.answer;
+        }
+
+        // Tab 04: Monte Carlo Lab
+        function setHorizon(years) {
+            state.horizonYears = years;
+            document.querySelectorAll('.horizon-btn').forEach(btn => {
+                const active = parseInt(btn.dataset.years) === years;
+                btn.className = active
+                    ? 'horizon-btn px-3 py-1 rounded bg-brass text-carbon font-semibold transition'
+                    : 'horizon-btn px-3 py-1 rounded text-zinc-400 hover:text-white transition';
+            });
+            updateMonteCarlo();
+        }
+
+        function updateMonteCarlo() {
+            const monthly = parseFloat(document.getElementById('mc-deposit-slider').value);
+            const years = state.horizonYears;
+            const months = years * 12;
+            const startBal = getPortfolioTotal();
+
+            document.getElementById('mc-deposit-label').textContent = `$${monthly.toLocaleString()} / mo`;
+            document.getElementById('mc-horizon-subtitle').textContent = `${years}-YEAR MEDIAN PROJECTED WEALTH (9.4% CAGR)`;
+
+            const project = (annualRate) => {
+                const r = annualRate / 12;
+                return startBal * Math.pow(1 + r, months) + monthly * ((Math.pow(1 + r, months) - 1) / r);
+            };
+
+            const p10 = project(0.056);
+            const p50 = project(0.094);
+            const p90 = project(0.134);
+
+            document.getElementById('mc-p10-val').textContent = '$' + Math.round(p10).toLocaleString();
+            document.getElementById('mc-median-val').textContent = '$' + Math.round(p50).toLocaleString();
+            document.getElementById('mc-p90-val').textContent = '$' + Math.round(p90).toLocaleString();
+
+            const maxScale = Math.max(p90, 220000);
+            const y0 = 152;
+            const mapY = (val) => Math.max(14, y0 - ((val - startBal) / (maxScale - startBal)) * 134);
+
+            const y90 = mapY(p90);
+            const y50 = mapY(p50);
+            const y10 = mapY(p10);
+
+            const p90Path = `M 0 ${y0} Q 320 ${(y0 + y90) * 0.56}, 640 ${y90.toFixed(1)}`;
+            const p50Path = `M 0 ${y0} Q 320 ${(y0 + y50) * 0.54}, 640 ${y50.toFixed(1)}`;
+            const p10Path = `M 0 ${y0} Q 320 ${(y0 + y10) * 0.52}, 640 ${y10.toFixed(1)}`;
+            const fanArea = `${p90Path} L 640 ${y10.toFixed(1)} Q 320 ${(y0 + y10) * 0.52}, 0 ${y0} Z`;
+
+            document.getElementById('mc-p90-path').setAttribute('d', p90Path);
+            document.getElementById('mc-p50-path').setAttribute('d', p50Path);
+            document.getElementById('mc-p10-path').setAttribute('d', p10Path);
+            document.getElementById('mc-fan-area').setAttribute('d', fanArea);
+        }
+
+        // Initialize App on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderHoldings();
+            renderChart('1M');
+            updateMonteCarlo();
+        });
+    </script>
+</body>
+</html>
